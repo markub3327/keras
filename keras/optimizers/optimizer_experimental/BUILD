@@ -2,6 +2,9 @@
 
 load("@org_keras//keras:keras.bzl", "distribute_py_test")
 
+# buildifier: disable=same-origin-load
+load("@org_keras//keras:keras.bzl", "tf_py_test")
+
 package(
     default_visibility = [
         "//keras:friends",
@@ -15,6 +18,7 @@ py_library(
         "adadelta.py",
         "adagrad.py",
         "adam.py",
+        "adamw.py",
         "optimizer.py",
         "rmsprop.py",
         "sgd.py",
@@ -42,5 +46,23 @@ distribute_py_test(
         "//keras",
         "//keras/optimizers",
         "//keras/testing_infra:test_combinations",
+    ],
+)
+
+tf_py_test(
+    name = "adamw_test",
+    size = "small",
+    srcs = ["adamw_test.py"],
+    tags = [
+        "no_oss",  # TODO(b/170766453)
+        "notap",  # TODO(b/170766453)
+    ],
+    deps = [
+        "//keras",
+        # "//keras:metrics",
+        "//keras/layers/core",
+        # "//keras/optimizer_experimental:optimizer",
+        "//:expect_numpy_installed",
+        "//third_party/py/tensorflow:tensorflow_no_contrib",
     ],
 )
